@@ -1,29 +1,32 @@
 import {Formik} from 'formik';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Dimensions, StyleSheet, Text, TextInput, View} from 'react-native';
-import Clickable from './Clickable.component';
-import Input from './Input.component';
-import Picker from './Picker.component';
 const windowHeight = Dimensions.get('window').height;
 
-interface ShowPageHeaderProps {
+interface CreateTodoProps {
   todo: Function;
+  value: any;
+  imageuri: string;
 }
 
-const CreateTodoComponent: React.FC<ShowPageHeaderProps> = (props) => {
+const CreateTodoComponent: React.FC<CreateTodoProps> = props => {
   return (
     <View style={Styles.TodoListChildContainer}>
       <Formik
-        initialValues={{title: '', description: ''}}
+        initialValues={{
+          title: props.value.title,
+          description: props.value.description,
+        }}
         validate={values => {
-          // console.log(values);
           const errors = {};
           if (!values.title) {
             console.log('Title empty');
             errors.title = '* Title field is mandatory';
-          }
-          else {
-            props.todo(values)
+          } else if (props.error === true) {
+            errors.title = "You can't set the empty todo";
+          } else {
+            console.log('else');
+            props.todo(values);
           }
           return errors;
         }}
@@ -37,13 +40,14 @@ const CreateTodoComponent: React.FC<ShowPageHeaderProps> = (props) => {
           touched,
         }) => (
           <>
-            <View style={Styles.InputContainer}>
+            <View>
               <TextInput
                 style={Styles.Input}
                 placeholder="Title"
                 placeholderTextColor={'rgba(0,0,0,0.3)'}
                 onChangeText={handleChange('title')}
                 onBlur={handleBlur('title')}
+                value={values.title}
               />
 
               {errors.title ? (
@@ -59,21 +63,9 @@ const CreateTodoComponent: React.FC<ShowPageHeaderProps> = (props) => {
                 onChangeText={handleChange('description')}
                 onBlur={handleBlur('description')}
                 multiline
+                value={values.description}
               />
             </View>
-            {/* <View style={Styles.Calendar}>
-              <Picker text={'Deadline (Optional)'} />
-            </View>
-            <View style={Styles.ImagePicker}>
-              <Picker text={'Add Image (Optional)'} />
-            </View>
-            <View style={Styles.SubmitButton}>
-              <Clickable
-                buttonText={'ADD TODO'}
-                color={'white'}
-                onPress={() => handleSubmit()}
-              />
-            </View> */}
           </>
         )}
       </Formik>
@@ -83,33 +75,23 @@ const CreateTodoComponent: React.FC<ShowPageHeaderProps> = (props) => {
 
 const Styles = StyleSheet.create({
   TodoListChildContainer: {
-    marginLeft: 25,
     marginRight: 25,
-    // flex: 1,
-  },
-  InputContainer: {
-    // backgroundColor:'black',
-    // marginTop:50,
   },
   Input: {
-    // borderWidth: 1,
-    borderRadius: 15,
     height: windowHeight / 10,
-    color: 'black',
-    fontWeight: '700',
-    // backgroundColor: 'blue'
+    color: '#272727',
+    fontFamily: 'BebasNeue-Regular',
+    fontWeight: 'bold',
+    fontSize: 24,
+    lineHeight: 26,
   },
   MultiLineInputContainer: {},
   MultilineTextInput: {
     textAlignVertical: 'top',
-    // borderColor: 'red',
-    // borderWidth: 2,
-    borderRadius: 15,
-    fontWeight: '700',
     color: 'black',
-
-    // height: windowHeight / 2.2,
-    // marginTop: 15,
+    fontFamily: 'Montserrat-ExtraLight',
+    lineHeight: 16,
+    fontSize: 18,
   },
 
   ShowError: {
@@ -118,16 +100,13 @@ const Styles = StyleSheet.create({
 
   Calendar: {
     marginTop: 15,
-    // flex:1,
   },
 
   ImagePicker: {
     marginTop: 15,
-    // flex:1,
   },
   SubmitButton: {
     marginTop: 15,
-    // flex:1,
   },
 });
 export default CreateTodoComponent;

@@ -1,40 +1,55 @@
 import React from 'react';
-import {Dimensions, Pressable, StyleSheet, Text, View} from 'react-native';
-import {ScrollView} from 'react-native-gesture-handler';
+import {
+  Dimensions,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import {useSelector} from 'react-redux';
 import Todo from '../models/Todo.model';
+import {RootState} from './Store.component';
 const windowHeight = Dimensions.get('window').height;
-
-interface ButtonProps {
-  todoItem: Todo[];
+let EXTENDEDSTRING = '...';
+interface TodoItemProps {
+  todo: Todo;
   naigation: any;
 }
-
-const TodoItem: React.FC<ButtonProps> = props => {
-  var date = new Date().getDate();
-  var month = new Date().getMonth() + 1;
-  var year = new Date().getFullYear();
+const TodoItem: React.FC<TodoItemProps> = props => {
+  const todo = useSelector((state: RootState) => state.createTodo.todo);
 
   const OnPressTodoItem = () => {
     console.log('clicked');
-    props.naigation.navigate('todoDetails',{
-      title: "edit"
-    })
+    console.log(props.todo);
+    console.log(props.todo.description.length);
+    props.naigation.navigate('todoDetails', {
+      title: 'edit',
+      currentTodo: props.todo,
+    });
   };
 
   return (
     <>
       <ScrollView>
         <View style={Styles.TodoItemcontainer}>
-          {props.todoItem.map(item =>
-            item.id % 2 === 0 ? (
+          {props.todo !== undefined &&
+            (props.todo.id % 2 === 0 ? (
               <Pressable
                 style={Styles.PressableContainer}
                 onPress={() => OnPressTodoItem()}>
                 <View style={Styles.PressableChildContainer}>
-                  <Text style={Styles.Header}>{item.title}</Text>
-                  <Text style={Styles.Description}>{item.description}</Text>
+                  <Text style={Styles.Header}>{props.todo.title}</Text>
+                  <Text style={Styles.Description}>
+                    {props.todo.description !== undefined
+                      ? props.todo.description.length < 20
+                        ? props.todo.description
+                        : props.todo.description.substring(0, 80) +
+                          EXTENDEDSTRING
+                      : null}
+                  </Text>
                   <Text style={Styles.Date}>
-                    created at {date}/{month}/{year}
+                    Created at {props.todo.createdAt}
                   </Text>
                 </View>
               </Pressable>
@@ -43,15 +58,21 @@ const TodoItem: React.FC<ButtonProps> = props => {
                 style={Styles.evenpressableContainer}
                 onPress={() => OnPressTodoItem()}>
                 <View style={Styles.PressableChildContainer}>
-                  <Text style={Styles.Header}>{item.title}</Text>
-                  <Text style={Styles.Description}>{item.description}</Text>
+                  <Text style={Styles.Header}>{props.todo.title}</Text>
+                  <Text style={Styles.Description}>
+                    {props.todo.description !== undefined
+                      ? props.todo.description.length < 20
+                        ? props.todo.description
+                        : props.todo.description.substring(0, 80) +
+                          EXTENDEDSTRING
+                      : null}
+                  </Text>
                   <Text style={Styles.Date}>
-                    created at {date}/{month}/{year}
+                    Created at {props.todo.createdAt}
                   </Text>
                 </View>
               </Pressable>
-            ),
-          )}
+            ))}
         </View>
       </ScrollView>
     </>
@@ -60,36 +81,37 @@ const TodoItem: React.FC<ButtonProps> = props => {
 const Styles = StyleSheet.create({
   PressableChildContainer: {
     marginLeft: 15,
-    // backgroundColor: 'red',
+    marginTop: 5,
   },
   TodoItemcontainer: {
     paddingTop: 20,
-    // minHeight: windowHeight
   },
   PressableContainer: {
     backgroundColor: '#F76C6A',
     borderRadius: 15,
-    height: 124,
-    marginBottom: 20,
+    height: 135,
   },
   evenpressableContainer: {
     backgroundColor: '#F79E89',
     borderRadius: 15,
-    height: 124,
-    marginBottom: 20,
+    height: 135,
   },
   Header: {
-    fontWeight: 'bold',
+    fontFamily: 'Montserrat-SemiBold',
+    fontWeight: '800',
     color: 'white',
-    fontSize: 15,
   },
   Description: {
     color: 'white',
+    fontFamily: 'Montserrat-ExtraLight',
+    fontWeight: '600',
     paddingTop: 10,
+    height: 50,
   },
   Date: {
     color: 'white',
-    paddingTop: 40,
+    paddingTop: 30,
+    fontFamily: 'Montserrat-ExtraLight',
   },
   contentContainer: {
     paddingVertical: 40,
