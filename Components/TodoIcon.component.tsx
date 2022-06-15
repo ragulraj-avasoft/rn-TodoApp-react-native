@@ -6,26 +6,20 @@ const windowHeight = Dimensions.get('window').height;
 const TodoIcon = () => {
   return (
     <View style={Styles.TodoIcon}>
-        <Image
-          style={Styles.TodoImage}
-          source={require('../images/Union.png')}
-        />
+      <Image style={Styles.TodoImage} source={require('../images/Union.png')} />
     </View>
   );
 };
 
 const Styles = StyleSheet.create({
   TodoIcon: {
-    flex: 1.5,
-    // backgroundColor: 'gray',
-    justifyContent: "center",
-    alignItems: "center",
-    
+    flex: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   TodoImage: {
     height: windowHeight / 4,
     width: windowWidth / 1.9,
-    // backgroundColor:"black"
   },
 });
 

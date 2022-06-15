@@ -1,6 +1,5 @@
 import React from 'react';
 import {Dimensions, StyleSheet, TextInput} from 'react-native';
-const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
 interface InputProps {
@@ -14,7 +13,7 @@ const Input: React.FC<InputProps> = props => {
     <>
       {props.color === 'black' ? (
         <TextInput
-          style={{...Styles.TextInput,...Styles.BlackBackgroundColor}}
+          style={{...Styles.TextInput, ...Styles.BlackBackgroundColor}}
           placeholder={props.placeholder}
           placeholderTextColor={'rgba(0,0,0,0.3)'}
           onChangeText={text => {
@@ -24,7 +23,7 @@ const Input: React.FC<InputProps> = props => {
         />
       ) : (
         <TextInput
-        style={{...Styles.TextInput,...Styles.WhiteBackgroundColor}}
+          style={{...Styles.TextInput, ...Styles.WhiteBackgroundColor}}
           placeholder={props.placeholder}
           placeholderTextColor={'white'}
           onChangeText={text => {
@@ -45,14 +44,14 @@ const Styles = StyleSheet.create({
     color: 'black',
     fontWeight: '700',
   },
-  BlackBackgroundColor:{
+  BlackBackgroundColor: {
     borderColor: '#272727',
   },
-  WhiteBackgroundColor:{
+  WhiteBackgroundColor: {
     borderColor: '#fff',
     borderWidth: 2,
-    color:"#fff"
-  }
+    color: '#fff',
+  },
 });
 
 export default Input;

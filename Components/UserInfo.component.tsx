@@ -10,22 +10,25 @@ interface UserInfoProps {
 const UserInfo: React.FC<UserInfoProps> = props => {
   let [submitValidationerror, setSubmitValidationerror] = useState(false);
 
-  const submitValidation = (values: any) => {
-    console.log('submit validation');
-    console.log(values);
-    if (values.email !== 'robinragulraj@gmail.com') {
-      setSubmitValidationerror(true);
-      // setSubmitValidationerrorText('Invalid Credentials')
-    } else {
-      setSubmitValidationerror(false);
-      if (values.password !== 'R@ava05121999') {
-        setSubmitValidationerror(true);
-      } else {
-        console.log('pass');
-        setSubmitValidationerror(false);
-        props.navigation.navigate('todo');
-      }
+  const onClickSubmit = (values: any) => {
+    console.log("submit")
+    // console.log(values)
+    // if (
+    //   values.email === 'robinragulraj@gmail.com' &&
+    //   values.password === 'R@ava05121999'
+    // ) {
+    //   console.log("if")
+    //   setSubmitValidationerror(false)
+    //   props.navigation.navigate('todo');
+    // } else {
+    //   console.log("else")
+    //   setSubmitValidationerror(true);
+    // }
+    if(values.email !="" && values.password != "")
+    {
+      props.navigation.navigate('todo');
     }
+
   };
 
   return (
@@ -35,7 +38,6 @@ const UserInfo: React.FC<UserInfoProps> = props => {
         <Formik
           initialValues={{email: '', password: ''}}
           validate={values => {
-            // console.log(values)
             const errors = {};
             if (!values.email) {
               errors.email = '* Required';
@@ -43,8 +45,6 @@ const UserInfo: React.FC<UserInfoProps> = props => {
               !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
             ) {
               errors.email = 'Invalid email address';
-            } else if (submitValidationerror == true) {
-              errors.email = "Emailid doesn't match";
             }
 
             let strongPassword = new RegExp(
@@ -56,12 +56,18 @@ const UserInfo: React.FC<UserInfoProps> = props => {
             } else if (strongPassword.test(values.password) === false) {
               errors.password =
                 'A minimum 8 characters password contains a combination of uppercase and lowercase letter and number are required.';
-            } else if (submitValidationerror == true) {
-              errors.password = "Password doesn't match with the emailId";
             }
+
+            if(submitValidationerror === true)
+            {
+              errors.email ="Invalid Credentials"
+              errors.password ="Invalid Credentials"
+            }
+
+            
             return errors;
           }}
-          onSubmit={values => submitValidation(values)}>
+          onSubmit={values =>onClickSubmit(values)}>
           {({
             handleChange,
             handleBlur,
@@ -124,53 +130,37 @@ const UserInfo: React.FC<UserInfoProps> = props => {
 };
 const Styles = StyleSheet.create({
   UserInfoParentContainer: {
-    flex: 1,
-    // backgroundColor: 'gray',
+    flex: 1.5,
     flexDirection: 'row',
   },
   LeftEmptyComtainer: {
-    // backgroundColor: "red",
     flex: 1,
   },
   UserInfoChildContainer: {
-    // backgroundColor: "blue",
-    // marginLeft: 25,
-    // marginRight: 25,
     flex: 8,
   },
   RightEmptyContainer: {
-    // backgroundColor:"blue",
     flex: 1,
   },
-  emailContainer: {
-    // backgroundColor:"blue",
-    // flex:1.5
-  },
+  emailContainer: {},
   PasswordContainer: {
-    // backgroundColor:"green",
-    // flex:1
     paddingTop: 20,
   },
   ForgotPasscode: {
     color: '#272727',
   },
   ForgotPasscodeContainer: {
-    // backgroundColor:"red",
-    // flex:0.75,
     marginLeft: 25,
     alignItems: 'flex-end',
     justifyContent: 'center',
     paddingTop: 10,
   },
   PressableContainer: {
-    // backgroundColor:"blue",
-    // flex:1,
     paddingTop: 10,
   },
   TextContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    // flex:1,
     paddingTop: 10,
   },
   BlackColor: {
