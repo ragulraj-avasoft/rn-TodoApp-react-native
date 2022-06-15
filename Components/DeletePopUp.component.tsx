@@ -30,7 +30,7 @@ const DeletePopUp: React.FC<DeletePopUpProps> = props => {
         <Pressable onPress={() => closeDeletePopup()}>
           <Image
             style={Styles.CloseButton}
-            source={require('../images/close.png')}
+            source={require('../images/closeButton.png')}
           />
         </Pressable>
         <Text style={Styles.Confirmationtext}>

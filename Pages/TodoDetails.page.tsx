@@ -109,7 +109,6 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
     console.log(imageUri);
     if (imageUri !== '') {
       console.log('if att');
-
       setCloseButtonClicked(true);
     } else {
       console.log('else att');
