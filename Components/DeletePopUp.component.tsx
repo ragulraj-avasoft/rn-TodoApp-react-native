@@ -13,21 +13,20 @@ const windowWidth = Dimensions.get('window').width;
 
 interface DeletePopUpProps {
   popUp: Function;
-  onPressDelete: Function;
+  onDelete: Function;
 }
 
 const DeletePopUp: React.FC<DeletePopUpProps> = props => {
-  const onClickDelete = () => {
-    console.log('delete pop');
-    props.onPressDelete();
+  const onDelete = () => {
+    props.onDelete();
   };
-  const closeDeletePopup = () => {
+  const closePopup = () => {
     props.popUp();
   };
   return (
     <View style={Styles.DeleteParentContainer}>
       <View style={Styles.DeleteChildCntainer}>
-        <Pressable onPress={() => closeDeletePopup()}>
+        <Pressable onPress={() => closePopup()}>
           <Image
             style={Styles.CloseButton}
             source={require('../images/closeButton.png')}
@@ -42,14 +41,14 @@ const DeletePopUp: React.FC<DeletePopUpProps> = props => {
             <Clickable
               buttonText={'cancel'}
               color={'orange'}
-              onPress={closeDeletePopup}
+              onPress={closePopup}
             />
           </View>
           <View style={Styles.DeleteButton}>
             <Clickable
               buttonText={'Delete'}
               color={'orange'}
-              onPress={onClickDelete}
+              onPress={onDelete}
             />
           </View>
         </View>

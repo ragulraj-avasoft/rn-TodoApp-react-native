@@ -10,32 +10,33 @@ import {
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 import ImagePicker, {openCamera} from 'react-native-image-crop-picker';
+import { NavigationScreenProp } from 'react-navigation';
 
-interface ShowPageHeaderProps {
-  navigation: any;
+interface TodoDetailsPageHeaderProps {
+  navigation: NavigationScreenProp<any, any>;
   title: string;
-  OnclickSaveButton: Function;
-  onClickEdit: Function;
-  onClickDelete: Function;
-  onClickAttachment: Function;
+  onSave: Function;
+  onEdit: Function;
+  onClickDeleteIcon: Function;
+  addImage: Function;
 }
 
-const ShowPageHeader: React.FC<ShowPageHeaderProps> = props => {
-  const OnclickBackButton = () => {
+const TodoDetailsPageHeader: React.FC<TodoDetailsPageHeaderProps> = props => {
+  const goBack = () => {
     console.log('back');
     props.navigation.navigate('todo');
   };
 
-  const OnclickSaveButton = () => {
-    props.OnclickSaveButton();
+  const onSave = () => {
+    props.onSave();
   };
 
-  const onClickEditButton = () => {
-    props.onClickEdit();
+  const onEdit = () => {
+    props.onEdit();
   };
 
-  const onClickDeleteIcon = () => {
-    props.onClickDelete();
+  const onDelete = () => {
+    props.onClickDeleteIcon();
   };
 
   const onClickAttachent = () => {
@@ -49,7 +50,7 @@ const ShowPageHeader: React.FC<ShowPageHeaderProps> = props => {
       console.log(response.path);
       let path: string = response.path;
       console.log('path: ' + path);
-      props.onClickAttachment(path);
+      props.addImage(path);
     });
   };
 
@@ -57,7 +58,7 @@ const ShowPageHeader: React.FC<ShowPageHeaderProps> = props => {
     <>
       <View style={Styles.PageHeaderContainer}>
         <View style={Styles.LeftSide}>
-          <Pressable onPress={OnclickBackButton}>
+          <Pressable onPress={goBack}>
             <Image
               style={Styles.BackButton}
               source={require('../images/chevron-left.png')}
@@ -72,7 +73,7 @@ const ShowPageHeader: React.FC<ShowPageHeaderProps> = props => {
                 source={require('../images/attachment.png')}
               />
             </Pressable>
-            <Pressable onPress={OnclickSaveButton}>
+            <Pressable onPress={onSave}>
               <Image
                 style={Styles.MarginLeft}
                 source={require('../images/newSave.png')}
@@ -87,13 +88,13 @@ const ShowPageHeader: React.FC<ShowPageHeaderProps> = props => {
                 source={require('../images/attachment.png')}
               />
             </Pressable>
-            <Pressable onPress={onClickEditButton}>
+            <Pressable onPress={onEdit}>
               <Image
                 style={Styles.MarginLeft}
                 source={require('../images/edit.png')}
               />
             </Pressable>
-            <Pressable onPress={onClickDeleteIcon}>
+            <Pressable onPress={onDelete}>
               <Image
                 style={Styles.MarginLeft}
                 source={require('../images/delete.png')}
@@ -135,4 +136,4 @@ const Styles = StyleSheet.create({
   },
 });
 
-export default ShowPageHeader;
+export default TodoDetailsPageHeader;

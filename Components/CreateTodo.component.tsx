@@ -1,5 +1,5 @@
 import {Formik} from 'formik';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {Dimensions, StyleSheet, Text, TextInput, View} from 'react-native';
 const windowHeight = Dimensions.get('window').height;
 
@@ -20,25 +20,14 @@ const CreateTodoComponent: React.FC<CreateTodoProps> = props => {
         validate={values => {
           const errors = {};
           if (!values.title) {
-            console.log('Title empty');
             errors.title = '* Title field is mandatory';
-          } else if (props.error === true) {
-            errors.title = "You can't set the empty todo";
           } else {
-            console.log('else');
             props.todo(values);
           }
           return errors;
         }}
         onSubmit={values => console.log(values)}>
-        {({
-          handleChange,
-          handleBlur,
-          handleSubmit,
-          values,
-          errors,
-          touched,
-        }) => (
+        {({handleChange, handleBlur, values, errors, touched}) => (
           <>
             <View>
               <TextInput
@@ -50,11 +39,11 @@ const CreateTodoComponent: React.FC<CreateTodoProps> = props => {
                 value={values.title}
               />
 
-              {errors.title ? (
+              {errors.title && touched.title ? (
                 <Text style={Styles.ShowError}>{errors.title}</Text>
               ) : null}
             </View>
-            <View style={Styles.MultiLineInputContainer}>
+            <View >
               <TextInput
                 style={Styles.MultilineTextInput}
                 numberOfLines={5}
@@ -85,7 +74,6 @@ const Styles = StyleSheet.create({
     fontSize: 24,
     lineHeight: 26,
   },
-  MultiLineInputContainer: {},
   MultilineTextInput: {
     textAlignVertical: 'top',
     color: 'black',
@@ -93,15 +81,12 @@ const Styles = StyleSheet.create({
     lineHeight: 16,
     fontSize: 18,
   },
-
   ShowError: {
     color: 'red',
   },
-
   Calendar: {
     marginTop: 15,
   },
-
   ImagePicker: {
     marginTop: 15,
   },

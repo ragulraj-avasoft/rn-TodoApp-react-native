@@ -1,11 +1,9 @@
 import {configureStore} from '@reduxjs/toolkit';
-import CreateTodoSlice from '../global-states/TodoState';
+import TodoSlice from '../global-states/TodoState';
 
 export const Store = configureStore({
   reducer: {
-    createTodo: CreateTodoSlice,
-    editTodo: CreateTodoSlice,
-    deleteTodo: CreateTodoSlice,
+    Todo:TodoSlice
   },
 });
 export type RootState = ReturnType<typeof Store.getState>;

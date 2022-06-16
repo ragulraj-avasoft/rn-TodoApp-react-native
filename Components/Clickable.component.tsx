@@ -1,5 +1,5 @@
 import React from 'react';
-import {Dimensions, Pressable, StyleSheet, Text, View} from 'react-native';
+import {Dimensions, Pressable, StyleSheet, Text} from 'react-native';
 const windowHeight = Dimensions.get('window').height;
 
 interface ClickableProps {

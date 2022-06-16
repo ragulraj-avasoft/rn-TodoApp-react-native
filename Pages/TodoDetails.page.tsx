@@ -7,8 +7,9 @@ import {createTodo, deleteTodo} from '../global-states/TodoState';
 import {editTodo} from '../global-states/TodoState';
 import {RootState} from '../Components/Store.component';
 import DeletePopUp from '../Components/DeletePopUp.component';
-import ShowPageHeader from '../Components/ShowPageHeader.component';
+import TodoDetailsPageHeader from '../Components/TodoDetailsPageHeader.component';
 import CreateTodoComponent from '../Components/CreateTodo.component';
+import {NavigationScreenProp} from 'react-navigation';
 import {
   Dimensions,
   Image,
@@ -17,13 +18,15 @@ import {
   Text,
   View,
 } from 'react-native';
+import BottomSheet from '../Components/BottomSheet.component';
+
 interface TOdoDetailsProps {
-  navigation: any;
-  route: any;
+  navigation: NavigationScreenProp<any, any>;
+  route: any
 }
 const TodoDetails: React.FC<TOdoDetailsProps> = props => {
   const value = props.route.params;
-
+  const OverAllTodo = useSelector((state: RootState) => state.Todo.todo);
   let [imageUri, setImageUri] = useState(value.currentTodo.imageUri);
   let [singleTodo, setSingleTodo] = useState<Todo>(value.currentTodo);
   let [isCloseButtonClicked, setCloseButtonClicked] = useState(false);
@@ -32,15 +35,12 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
   const dispatcher = useDispatch();
 
   useEffect(() => {
-    console.log(imageUri);
     if (value.title === 'edit' && imageUri != undefined) {
       setCloseButtonClicked(true);
     }
   }),[];
 
-  const OverAllTodo = useSelector((state: RootState) => state.createTodo.todo);
   let id = 0;
-  let TodoImageUri: string;
   var day = new Date().getDate().toString();
   var year = new Date().getFullYear().toString();
   const months = [
@@ -61,9 +61,8 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
   let monthName = months[date.getMonth()];
   var createdDate = day + ' ' + monthName + ' ' + year;
 
-  const OnClickSaveButton = () => {
+  const onSave = () => {
     if (singleTodo !== undefined) {
-      console.log('if1');
       if (OverAllTodo.length === 0) {
         singleTodo.id = id + 1;
       } else {
@@ -71,54 +70,43 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
         let currentId = OverAllTodo[length - 1].id;
         singleTodo.id = currentId + 1;
       }
-      if (imageUri !== '') {
-        console.log('Create image');
-        singleTodo.imageUri = imageUri;
-      }
       if (singleTodo.description === undefined) {
         singleTodo.description = '';
       }
-      console.log(singleTodo);
-      console.log('todo sent');
+      singleTodo.imageUri = imageUri;
       dispatcher(createTodo(singleTodo));
       props.navigation.navigate('todo');
-    } else {
-      console.log('details else');
-    }
+    } 
   };
 
-  const onClickEditButton = () => {
-    console.log(singleTodo);
+  const onEdit = () => {
     if (singleTodo !== undefined) {
-      (singleTodo.id = value.currentTodo.id),
-        (singleTodo.imageUri = imageUri),
-        setImageUri(imageUri),
-        dispatcher(editTodo(singleTodo));
+      singleTodo.id = value.currentTodo.id;
+      singleTodo.imageUri = imageUri;
+      setImageUri(imageUri);
+      dispatcher(editTodo(singleTodo));
       props.navigation.navigate('todo');
-    } else {
     }
   };
 
-  const onClickAttachment = (imageUri: string) => {
-    console.log('attachment ccccc');
+  const onDelete = () => {
+    props.navigation.navigate('todo');
+    dispatcher(deleteTodo(value.currentTodo));
+  };
+
+  const addImage = (imageUri: string) => {
     setImageUri(imageUri);
-    console.log(imageUri);
     const TodoClone = {...singleTodo};
     TodoClone.imageUri = imageUri;
     setSingleTodo(TodoClone);
-    console.log(imageUri);
     if (imageUri !== '') {
-      console.log('if att');
       setCloseButtonClicked(true);
     } else {
-      console.log('else att');
       setCloseButtonClicked(false);
     }
   };
 
   const getTodo = (values: any) => {
-    console.log('get todo');
-    console.log(values);
     const todoItem: Todo = {
       id: 0,
       title: values.title,
@@ -127,13 +115,11 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
       imageUri: '',
     };
     setSingleTodo(todoItem);
-    console.log('single');
   };
 
-  const onPressImageCloseButton = () => {
-    setCloseButtonClicked(false);
+  const onClose = () => {
     setImageUri('');
-    onClickAttachment('');
+    addImage('');
   };
 
   const onClickDeleteIcon = () => {
@@ -141,14 +127,7 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
   };
 
   const closePopUp = () => {
-    console.log('close');
     setDeleteClicked(false);
-  };
-
-  const onClickDeleteConfirmationButton = () => {
-    console.log('Delete Todo');
-    props.navigation.navigate('todo');
-    dispatcher(deleteTodo(value.currentTodo));
   };
 
   return (
@@ -156,18 +135,18 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
       {deleteClicked === true ? (
         <DeletePopUp
           popUp={closePopUp}
-          onPressDelete={onClickDeleteConfirmationButton}
+          onDelete={onDelete}
         />
       ) : null}
       <View style={Styles.TodoListParentContainer}>
         <View style={Styles.TodoListChildContainer}>
-          <ShowPageHeader
+          <TodoDetailsPageHeader
             navigation={props.navigation}
             title={value.title}
-            OnclickSaveButton={OnClickSaveButton}
-            onClickEdit={onClickEditButton}
-            onClickDelete={onClickDeleteIcon}
-            onClickAttachment={onClickAttachment}
+            onSave={onSave}
+            onEdit={onEdit}
+            onClickDeleteIcon={onClickDeleteIcon}
+            addImage={addImage}
           />
           <CreateTodoComponent
             todo={getTodo}
@@ -179,7 +158,7 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
           <View style={Styles.ImageContainer}>
             <Pressable
               style={Styles.closeButtoncontainer}
-              onPress={onPressImageCloseButton}>
+              onPress={onClose}>
               <Image
                 style={Styles.CloseButton}
                 source={require('../images/closeButton.png')}

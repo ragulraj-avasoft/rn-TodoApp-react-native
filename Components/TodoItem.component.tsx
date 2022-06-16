@@ -7,9 +7,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import {useSelector} from 'react-redux';
 import Todo from '../models/Todo.model';
-import {RootState} from './Store.component';
 const windowHeight = Dimensions.get('window').height;
 let EXTENDEDSTRING = '...';
 interface TodoItemProps {
@@ -17,12 +15,7 @@ interface TodoItemProps {
   naigation: any;
 }
 const TodoItem: React.FC<TodoItemProps> = props => {
-  const todo = useSelector((state: RootState) => state.createTodo.todo);
-
-  const OnPressTodoItem = () => {
-    console.log('clicked');
-    console.log(props.todo);
-    console.log(props.todo.description.length);
+  const OnPressTodo = () => {
     props.naigation.navigate('todoDetails', {
       title: 'edit',
       currentTodo: props.todo,
@@ -37,7 +30,7 @@ const TodoItem: React.FC<TodoItemProps> = props => {
             (props.todo.id % 2 === 0 ? (
               <Pressable
                 style={Styles.PressableContainer}
-                onPress={() => OnPressTodoItem()}>
+                onPress={() => OnPressTodo()}>
                 <View style={Styles.PressableChildContainer}>
                   <Text style={Styles.Header}>{props.todo.title}</Text>
                   <Text style={Styles.Description}>
@@ -56,7 +49,7 @@ const TodoItem: React.FC<TodoItemProps> = props => {
             ) : (
               <Pressable
                 style={Styles.evenpressableContainer}
-                onPress={() => OnPressTodoItem()}>
+                onPress={() => OnPressTodo()}>
                 <View style={Styles.PressableChildContainer}>
                   <Text style={Styles.Header}>{props.todo.title}</Text>
                   <Text style={Styles.Description}>

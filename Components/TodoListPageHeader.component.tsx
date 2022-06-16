@@ -1,10 +1,9 @@
 import React from 'react';
 import {Dimensions, Image, StyleSheet, Text, View} from 'react-native';
-import Setting from './setting.component';
 const windowWidth = Dimensions.get('window').width;
 const windowHeight = Dimensions.get('window').height;
 
-const PageHeader = () => {
+const TodoList = () => {
   return (
     <View style={Styles.PageHeaderContainer}>
       <Text style={Styles.TextFont}>TO DO LIST</Text>
@@ -41,4 +40,4 @@ const Styles = StyleSheet.create({
   },
 });
 
-export default PageHeader;
+export default TodoList;

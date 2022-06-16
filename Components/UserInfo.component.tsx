@@ -1,34 +1,26 @@
-import React, {useState} from 'react';
-import {Dimensions, Linking, StyleSheet, Text, View} from 'react-native';
+import React, { useState } from 'react';
+import { Linking, StyleSheet, Text, View} from 'react-native';
 import Input from './Input.component';
-import {ErrorMessage, Formik} from 'formik';
+import { Formik} from 'formik';
 import Clickable from './Clickable.component';
+import { NavigationScreenProp } from 'react-navigation';
 
 interface UserInfoProps {
-  navigation: any;
+  navigation: NavigationScreenProp<any, any>;
 }
 const UserInfo: React.FC<UserInfoProps> = props => {
-  let [submitValidationerror, setSubmitValidationerror] = useState(false);
+  let[submitError, setSubmitError] = useState(false)
 
-  const onClickSubmit = (values: any) => {
-    console.log("submit")
-    // console.log(values)
-    // if (
-    //   values.email === 'robinragulraj@gmail.com' &&
-    //   values.password === 'R@ava05121999'
-    // ) {
-    //   console.log("if")
-    //   setSubmitValidationerror(false)
-    //   props.navigation.navigate('todo');
-    // } else {
-    //   console.log("else")
-    //   setSubmitValidationerror(true);
-    // }
-    if(values.email !="" && values.password != "")
+  const onSubmit = (values: any) => {
+    if(values.email ==="robinragulraj@gmail.com" && values.password === "R@ava05121999")
     {
+      setSubmitError(false)
       props.navigation.navigate('todo');
     }
-
+    else
+    {
+      setSubmitError(true)
+    }
   };
 
   return (
@@ -38,6 +30,8 @@ const UserInfo: React.FC<UserInfoProps> = props => {
         <Formik
           initialValues={{email: '', password: ''}}
           validate={values => {
+            console.log(values)
+            setSubmitError(false)
             const errors = {};
             if (!values.email) {
               errors.email = '* Required';
@@ -45,6 +39,11 @@ const UserInfo: React.FC<UserInfoProps> = props => {
               !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
             ) {
               errors.email = 'Invalid email address';
+            }
+            else if(submitError === true)
+            {
+              console.log("submiterror")
+              errors.email = "Invalid Credentials ";
             }
 
             let strongPassword = new RegExp(
@@ -56,18 +55,14 @@ const UserInfo: React.FC<UserInfoProps> = props => {
             } else if (strongPassword.test(values.password) === false) {
               errors.password =
                 'A minimum 8 characters password contains a combination of uppercase and lowercase letter and number are required.';
-            }
-
-            if(submitValidationerror === true)
+            }     
+            else if(submitError === true)
             {
-              errors.email ="Invalid Credentials"
-              errors.password ="Invalid Credentials"
-            }
-
-            
+              errors.password = "Invalid Credentials ";
+            }  
             return errors;
           }}
-          onSubmit={values =>onClickSubmit(values)}>
+          onSubmit={values =>onSubmit(values)}>
           {({
             handleChange,
             handleBlur,
