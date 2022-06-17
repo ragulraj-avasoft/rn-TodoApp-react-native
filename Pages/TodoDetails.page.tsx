@@ -33,13 +33,11 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
   let [deleteClicked, setDeleteClicked] = useState(false);
 
   const dispatcher = useDispatch();
-
   useEffect(() => {
     if (value.title === 'edit' && imageUri != undefined) {
       setCloseButtonClicked(true);
     }
-  }),
-    [];
+  }, []);
 
   let id = 0;
   var day = new Date().getDate().toString();
@@ -63,7 +61,6 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
   var createdDate = day + ' ' + monthName + ' ' + year;
 
   const onSave = async () => {
-
     // if (singleTodo !== undefined) {
     //   if (singleTodo.description === undefined) {
     //     singleTodo.description = '';
