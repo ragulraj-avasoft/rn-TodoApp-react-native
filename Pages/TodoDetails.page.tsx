@@ -10,6 +10,7 @@ import DeletePopUp from '../Components/DeletePopUp.component';
 import TodoDetailsPageHeader from '../Components/TodoDetailsPageHeader.component';
 import CreateTodoComponent from '../Components/CreateTodo.component';
 import {NavigationScreenProp} from 'react-navigation';
+import AlterTodo from '../TodoSchema';
 import {
   Dimensions,
   Image,
@@ -18,11 +19,10 @@ import {
   Text,
   View,
 } from 'react-native';
-import BottomSheet from '../Components/BottomSheet.component';
 
 interface TOdoDetailsProps {
   navigation: NavigationScreenProp<any, any>;
-  route: any
+  route: any;
 }
 const TodoDetails: React.FC<TOdoDetailsProps> = props => {
   const value = props.route.params;
@@ -38,7 +38,8 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
     if (value.title === 'edit' && imageUri != undefined) {
       setCloseButtonClicked(true);
     }
-  }),[];
+  }),
+    [];
 
   let id = 0;
   var day = new Date().getDate().toString();
@@ -61,7 +62,15 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
   let monthName = months[date.getMonth()];
   var createdDate = day + ' ' + monthName + ' ' + year;
 
-  const onSave = () => {
+  const onSave = async () => {
+
+    // if (singleTodo !== undefined) {
+    //   if (singleTodo.description === undefined) {
+    //     singleTodo.description = '';
+    //   }
+    //   await AlterTodo.createTodo(singleTodo);
+    //   props.navigation.navigate('todo');
+    // }
     if (singleTodo !== undefined) {
       if (OverAllTodo.length === 0) {
         singleTodo.id = id + 1;
@@ -76,7 +85,7 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
       singleTodo.imageUri = imageUri;
       dispatcher(createTodo(singleTodo));
       props.navigation.navigate('todo');
-    } 
+    }
   };
 
   const onEdit = () => {
@@ -122,7 +131,7 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
     addImage('');
   };
 
-  const onClickDeleteIcon = () => {
+  const showPopUp = () => {
     setDeleteClicked(true);
   };
 
@@ -133,10 +142,7 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
   return (
     <>
       {deleteClicked === true ? (
-        <DeletePopUp
-          popUp={closePopUp}
-          onDelete={onDelete}
-        />
+        <DeletePopUp popUp={closePopUp} onDelete={onDelete} />
       ) : null}
       <View style={Styles.TodoListParentContainer}>
         <View style={Styles.TodoListChildContainer}>
@@ -145,7 +151,7 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
             title={value.title}
             onSave={onSave}
             onEdit={onEdit}
-            onClickDeleteIcon={onClickDeleteIcon}
+            showPopUp={showPopUp}
             addImage={addImage}
           />
           <CreateTodoComponent
@@ -156,9 +162,7 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
         </View>
         {isCloseButtonClicked === true && imageUri !== '' ? (
           <View style={Styles.ImageContainer}>
-            <Pressable
-              style={Styles.closeButtoncontainer}
-              onPress={onClose}>
+            <Pressable style={Styles.closeButtoncontainer} onPress={onClose}>
               <Image
                 style={Styles.CloseButton}
                 source={require('../images/closeButton.png')}

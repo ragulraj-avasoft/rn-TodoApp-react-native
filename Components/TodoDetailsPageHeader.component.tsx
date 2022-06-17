@@ -17,7 +17,7 @@ interface TodoDetailsPageHeaderProps {
   title: string;
   onSave: Function;
   onEdit: Function;
-  onClickDeleteIcon: Function;
+  showPopUp: Function;
   addImage: Function;
 }
 
@@ -36,7 +36,7 @@ const TodoDetailsPageHeader: React.FC<TodoDetailsPageHeaderProps> = props => {
   };
 
   const onDelete = () => {
-    props.onClickDeleteIcon();
+    props.showPopUp();
   };
 
   const onClickAttachent = () => {

@@ -24,7 +24,6 @@ const TodoList: React.FC<TodoListProps> = props => {
   const todo = useSelector((state: RootState) => state.Todo.todo);
 
   const OnPressFAB = () => {
-    console.log('clicked');
     const value = props.route.params;
     props.navigation.navigate('todoDetails', {
       title: 'save',
