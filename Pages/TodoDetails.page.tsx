@@ -38,27 +38,31 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
       setCloseButtonClicked(true);
     }
   }, []);
+  const calculateDate =()=>{
+    var day = new Date().getDate().toString();
+    var year = new Date().getFullYear().toString();
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    const date = new Date();
+    let monthName = months[date.getMonth()];
+    var createdDate = day + ' ' + monthName + ' ' + year;
+    return createdDate
 
+  }
   let id = 0;
-  var day = new Date().getDate().toString();
-  var year = new Date().getFullYear().toString();
-  const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-  const date = new Date();
-  let monthName = months[date.getMonth()];
-  var createdDate = day + ' ' + monthName + ' ' + year;
+
 
   const onSave = async () => {
     // if (singleTodo !== undefined) {
@@ -80,6 +84,7 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
         singleTodo.description = '';
       }
       singleTodo.imageUri = imageUri;
+      singleTodo.createdAt = calculateDate()
       dispatcher(createTodo(singleTodo));
       props.navigation.navigate('todo');
     }
@@ -88,6 +93,7 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
   const onEdit = () => {
     if (singleTodo !== undefined) {
       singleTodo.id = value.currentTodo.id;
+      singleTodo.createdAt =value.currentTodo.createdAt
       singleTodo.imageUri = imageUri;
       setImageUri(imageUri);
       dispatcher(editTodo(singleTodo));
@@ -117,7 +123,7 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
       id: 0,
       title: values.title,
       description: values.description,
-      createdAt: createdDate,
+      createdAt: "",
       imageUri: '',
     };
     setSingleTodo(todoItem);
