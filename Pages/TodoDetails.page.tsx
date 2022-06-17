@@ -10,7 +10,6 @@ import DeletePopUp from '../Components/DeletePopUp.component';
 import TodoDetailsPageHeader from '../Components/TodoDetailsPageHeader.component';
 import CreateTodoComponent from '../Components/CreateTodo.component';
 import {NavigationScreenProp} from 'react-navigation';
-import AlterTodo from '../TodoSchema';
 import {
   Dimensions,
   Image,
@@ -38,7 +37,7 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
       setCloseButtonClicked(true);
     }
   }, []);
-  const calculateDate =()=>{
+  const calculateDate = () => {
     var day = new Date().getDate().toString();
     var year = new Date().getFullYear().toString();
     const months = [
@@ -58,11 +57,9 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
     const date = new Date();
     let monthName = months[date.getMonth()];
     var createdDate = day + ' ' + monthName + ' ' + year;
-    return createdDate
-
-  }
+    return createdDate;
+  };
   let id = 0;
-
 
   const onSave = async () => {
     // if (singleTodo !== undefined) {
@@ -84,7 +81,7 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
         singleTodo.description = '';
       }
       singleTodo.imageUri = imageUri;
-      singleTodo.createdAt = calculateDate()
+      singleTodo.createdAt = calculateDate();
       dispatcher(createTodo(singleTodo));
       props.navigation.navigate('todo');
     }
@@ -93,7 +90,7 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
   const onEdit = () => {
     if (singleTodo !== undefined) {
       singleTodo.id = value.currentTodo.id;
-      singleTodo.createdAt =value.currentTodo.createdAt
+      singleTodo.createdAt = value.currentTodo.createdAt;
       singleTodo.imageUri = imageUri;
       setImageUri(imageUri);
       dispatcher(editTodo(singleTodo));
@@ -123,7 +120,7 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
       id: 0,
       title: values.title,
       description: values.description,
-      createdAt: "",
+      createdAt: '',
       imageUri: '',
     };
     setSingleTodo(todoItem);
