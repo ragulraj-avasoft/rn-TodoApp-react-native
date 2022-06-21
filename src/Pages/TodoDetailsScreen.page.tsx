@@ -1,11 +1,9 @@
 import React, {useEffect, useState} from 'react';
-const windowHeight = Dimensions.get('window').height;
-const windowWidth = Dimensions.get('window').width;
 import Todo from '../models/Todo.model';
 import {useDispatch, useSelector} from 'react-redux';
 import {createTodo, deleteTodo} from '../global-states/TodoState';
 import {editTodo} from '../global-states/TodoState';
-import {RootState} from '../Components/Store.component';
+import {RootState} from '../Store';
 import DeletePopUp from '../Components/DeletePopUp.component';
 import TodoDetailsPageHeader from '../Components/TodoDetailsPageHeader.component';
 import CreateTodoComponent from '../Components/CreateTodo.component';
@@ -18,6 +16,7 @@ import {
   Text,
   View,
 } from 'react-native';
+import WindowSize from '../config/Measurement';
 
 interface TOdoDetailsProps {
   navigation: NavigationScreenProp<any, any>;
@@ -30,7 +29,6 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
   let [singleTodo, setSingleTodo] = useState<Todo>(value.currentTodo);
   let [isCloseButtonClicked, setCloseButtonClicked] = useState(false);
   let [deleteClicked, setDeleteClicked] = useState(false);
-
   const dispatcher = useDispatch();
   useEffect(() => {
     if (value.title === 'edit' && imageUri != undefined) {
@@ -38,8 +36,6 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
     }
   }, []);
   const calculateDate = () => {
-    var day = new Date().getDate().toString();
-    var year = new Date().getFullYear().toString();
     const months = [
       'January',
       'February',
@@ -54,22 +50,19 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
       'November',
       'December',
     ];
-    const date = new Date();
+    let date:Date = value.currentTodo.createdAt;
+    var day = date.getDate().toString()
     let monthName = months[date.getMonth()];
+    var year = date.getFullYear().toString();
     var createdDate = day + ' ' + monthName + ' ' + year;
     return createdDate;
   };
   let id = 0;
 
   const onSave = async () => {
-    // if (singleTodo !== undefined) {
-    //   if (singleTodo.description === undefined) {
-    //     singleTodo.description = '';
-    //   }
-    //   await AlterTodo.createTodo(singleTodo);
-    //   props.navigation.navigate('todo');
-    // }
+
     if (singleTodo !== undefined) {
+      console.log(singleTodo)
       if (OverAllTodo.length === 0) {
         singleTodo.id = id + 1;
       } else {
@@ -81,8 +74,8 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
         singleTodo.description = '';
       }
       singleTodo.imageUri = imageUri;
-      singleTodo.createdAt = calculateDate();
       dispatcher(createTodo(singleTodo));
+      console.log("saved")
       props.navigation.navigate('todo');
     }
   };
@@ -120,7 +113,7 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
       id: 0,
       title: values.title,
       description: values.description,
-      createdAt: '',
+      createdAt: new Date(),
       imageUri: '',
     };
     setSingleTodo(todoItem);
@@ -144,8 +137,8 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
       {deleteClicked === true ? (
         <DeletePopUp popUp={closePopUp} onDelete={onDelete} />
       ) : null}
-      <View style={Styles.TodoListParentContainer}>
-        <View style={Styles.TodoListChildContainer}>
+      <View style={Styles.todoListParentContainer}>
+        <View style={Styles.todoListChildContainer}>
           <TodoDetailsPageHeader
             navigation={props.navigation}
             title={value.title}
@@ -161,20 +154,20 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
           />
         </View>
         {isCloseButtonClicked === true && imageUri !== '' ? (
-          <View style={Styles.ImageContainer}>
+          <View style={Styles.imageContainer}>
             <Pressable style={Styles.closeButtoncontainer} onPress={onClose}>
               <Image
-                style={Styles.CloseButton}
+                style={Styles.closeButton}
                 source={require('../images/closeButton.png')}
               />
             </Pressable>
-            <Image style={Styles.ImageSize} source={{uri: imageUri}} />
+            <Image style={Styles.imageSize} source={{uri: imageUri}} />
           </View>
         ) : null}
         {value.title === 'edit' ? (
-          <View style={Styles.CreatedAtDateContainer}>
-            <Text style={Styles.CreatedAtDate}>
-              Created at {value.currentTodo.createdAt}
+          <View style={Styles.createdAtContainer}>
+            <Text style={Styles.createdAt}>
+              Created at {calculateDate()}
             </Text>
           </View>
         ) : null}
@@ -184,38 +177,38 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
 };
 
 const Styles = StyleSheet.create({
-  TodoListParentContainer: {
-    height: windowHeight,
-    width: windowWidth,
+  todoListParentContainer: {
+    height: WindowSize.windowHeight,
+    width: WindowSize.windowWidth,
     zIndex: 0,
   },
-  TodoListChildContainer: {
+  todoListChildContainer: {
     paddingLeft: 25,
     paddingRight: 25,
   },
-  CreatedAtDateContainer: {
+  createdAtContainer: {
     position: 'absolute',
     bottom: 10,
     alignSelf: 'center',
   },
-  CreatedAtDate: {
+  createdAt: {
     color: '#272727',
     fontFamily: 'Montserrat-ExtraLight',
   },
-  ImageContainer: {
+  imageContainer: {
     position: 'relative',
     marginTop: 10,
     zIndex: 1,
-    height: windowHeight / 1.8,
-    width: windowWidth / 1,
+    height: WindowSize.windowHeight / 1.8,
+    width: WindowSize.windowWidth / 1,
   },
-  ImageSize: {
-    height: windowHeight / 2,
-    width: windowWidth / 1.2,
+  imageSize: {
+    height: WindowSize.windowHeight / 2,
+    width: WindowSize.windowWidth / 1.2,
     alignSelf: 'center',
     zIndex: 2,
   },
-  CloseButton: {
+  closeButton: {
     marginTop: 5,
     marginRight: 5,
     width: 25,
@@ -228,7 +221,7 @@ const Styles = StyleSheet.create({
   },
   closeButtoncontainer: {
     alignSelf: 'center',
-    width: windowWidth / 1.2,
+    width: WindowSize.windowWidth / 1.2,
     height: 70,
     position: 'absolute',
     zIndex: 3,

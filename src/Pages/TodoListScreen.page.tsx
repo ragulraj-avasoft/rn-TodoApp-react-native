@@ -1,4 +1,9 @@
 import React from 'react';
+import TodoListPageHeader from '../Components/TodoListPageHeader.component';
+import TodoItem from '../Components/TodoItem.component';
+import {useSelector} from 'react-redux';
+import {RootState} from '../Store';
+import {NavigationScreenProp} from 'react-navigation';
 import {
   Dimensions,
   Image,
@@ -7,13 +12,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import TodoListPageHeader from '../Components/TodoListPageHeader.component';
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
-import TodoItem from '../Components/TodoItem.component';
-import {useSelector} from 'react-redux';
-import {RootState} from '../Components/Store.component';
-import { NavigationScreenProp } from 'react-navigation';
+import WindowSize from '../config/Measurement';
+
 
 interface TodoListProps {
   navigation: NavigationScreenProp<any, any>;
@@ -33,23 +33,27 @@ const TodoList: React.FC<TodoListProps> = props => {
 
   return (
     <>
-      <View style={Styles.TodoListParentContainer}>
-        <View style={Styles.TodoListChildContainer}>
+      <View style={Styles.todoListParentContainer}>
+        <View style={Styles.todoListChildContainer}>
           <TodoListPageHeader />
           <ScrollView>
-            <View style={Styles.OverallList}>
+            <View style={Styles.overallList}>
               {todo.map(todoItem => (
-                <TodoItem key={todoItem.id} todo={todoItem} naigation={props.navigation} />
+                <TodoItem
+                  key={todoItem.id}
+                  todo={todoItem}
+                  naigation={props.navigation}
+                />
               ))}
             </View>
           </ScrollView>
         </View>
       </View>
       <TouchableOpacity
-        style={Styles.FloatingActionButton}
+        style={Styles.floatingActionButton}
         onPress={OnPressFAB}>
         <Image
-          style={Styles.FloatingButton}
+          style={Styles.floatingButton}
           source={require('../images/plus-circle.png')}
         />
       </TouchableOpacity>
@@ -58,31 +62,29 @@ const TodoList: React.FC<TodoListProps> = props => {
 };
 
 const Styles = StyleSheet.create({
-  EmptyContainer: {
-    height: windowHeight / 4,
+
+  todoListParentContainer: {
+    height: WindowSize.windowHeight,
+    width:WindowSize.windowWidth,
+    minHeight: WindowSize.windowHeight,
   },
-  TodoListParentContainer: {
-    height: windowHeight,
-    width: windowWidth,
-    minHeight: windowHeight,
-  },
-  TodoListChildContainer: {
+  todoListChildContainer: {
     marginLeft: 25,
     marginRight: 25,
   },
-  FloatingButton: {
+  floatingButton: {
     resizeMode: 'contain',
   },
-  FloatingActionButton: {
-    height: windowHeight / 15,
-    width: windowWidth / 10,
+  floatingActionButton: {
+    height: WindowSize.windowHeight / 15,
+    width: WindowSize.windowWidth / 10,
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
     right: 30,
     bottom: 30,
   },
-  OverallList: {
+  overallList: {
     marginBottom: 50,
   },
 });

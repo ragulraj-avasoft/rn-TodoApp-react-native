@@ -1,7 +1,6 @@
 import React from 'react';
 import {Dimensions, Pressable, StyleSheet, Text} from 'react-native';
-const windowHeight = Dimensions.get('window').height;
-
+import WindowSize from '../config/Measurement';
 interface ClickableProps {
   buttonText: string;
   color: string;
@@ -10,33 +9,26 @@ interface ClickableProps {
 const Clickable: React.FC<ClickableProps> = props => {
   return (
     <>
-      {props.color === 'orange' ? (
-        <Pressable style={Styles.Button}
-        onPress ={() => props.onPress()}
-        >
-          <Text style={Styles.ButtonText}>{props.buttonText}</Text>
+      {
+        <Pressable
+          style={[Styles.button, {backgroundColor: props.color}]}
+          onPress={() => props.onPress()}>
+          <Text style={Styles.buttonText}>{props.buttonText}</Text>
         </Pressable>
-      ) : (
-        <Pressable 
-        style={{...Styles.Button, ...Styles.orangeColor}}
-        >
-          <Text style={{...Styles.ButtonTextColor,...Styles.ButtonText}}>{props.buttonText}</Text>
-        </Pressable>
-      )}
+      }
     </>
   );
 };
 
 const Styles = StyleSheet.create({
-  ButtonText: {
+  buttonText: {
     fontWeight: 'bold',
   },
-  Button: {
-    backgroundColor: '#F79E89',
+  button: {
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 15,
-    height: windowHeight / 13,
+    height: WindowSize.windowHeight / 13,
   },
   whiteColor: {
     backgroundColor: '#FFFFFF',
@@ -46,9 +38,6 @@ const Styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     color: 'white',
   },
-  ButtonTextColor:{
-    color:"#F79E89",
-  }
 });
 
 export default Clickable;

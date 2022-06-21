@@ -1,18 +1,17 @@
-import React from 'react';
-import {Dimensions, ScrollView, StyleSheet, View} from 'react-native';
+import React, { useState } from 'react';
 import TodoIcon from '../Components/TodoIcon.component';
 import UserInfo from '../Components/UserInfo.component';
-const windowWidth = Dimensions.get('window').width;
-const windowHeight = Dimensions.get('window').height;
+import {ScrollView, StyleSheet, View} from 'react-native';
+import WindowSize from '../config/Measurement';
 
 interface LoginProps {
   navigation: any;
 }
-
 const Login: React.FC<LoginProps> = props => {
+
   return (
     <ScrollView>
-      <View style={Styles.Container}>
+      <View style={Styles.container}>
         <TodoIcon />
         <UserInfo navigation={props.navigation} />
       </View>
@@ -21,9 +20,10 @@ const Login: React.FC<LoginProps> = props => {
 };
 
 const Styles = StyleSheet.create({
-  Container: {
-    width: windowWidth,
-    minHeight: windowHeight + 150,
+  container: {
+    width: WindowSize.windowWidth,
+    height: WindowSize.windowHeight,
   },
+
 });
 export default Login;

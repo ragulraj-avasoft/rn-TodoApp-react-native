@@ -1,24 +1,32 @@
 import {Formik} from 'formik';
 import React from 'react';
-import {Dimensions, StyleSheet, Text, TextInput, View} from 'react-native';
-const windowHeight = Dimensions.get('window').height;
+import {StyleSheet, Text, TextInput, View} from 'react-native';
+import Input from './Input.component';
+import WindowSize from '../config/Measurement';
 
+interface TodoDetails {
+  title: string;
+  description: string;
+}
 interface CreateTodoProps {
   todo: Function;
-  value: any;
+  value: TodoDetails;
   imageuri: string;
 }
 
 const CreateTodoComponent: React.FC<CreateTodoProps> = props => {
   return (
-    <View style={Styles.TodoListChildContainer}>
+    <View style={Styles.todoListChildContainer}>
       <Formik
         initialValues={{
           title: props.value.title,
           description: props.value.description,
         }}
         validate={values => {
-          const errors = {};
+          const errors: TodoDetails = {
+            title: '',
+            description: '',
+          };
           if (!values.title) {
             errors.title = '* Title field is mandatory';
           } else {
@@ -30,29 +38,36 @@ const CreateTodoComponent: React.FC<CreateTodoProps> = props => {
         {({handleChange, handleBlur, values, errors, touched}) => (
           <>
             <View>
-              <TextInput
-                style={Styles.Input}
+              <Input
+                color="#272727"
                 placeholder="Title"
-                placeholderTextColor={'rgba(0,0,0,0.3)'}
                 onChangeText={handleChange('title')}
                 onBlur={handleBlur('title')}
                 value={values.title}
+                style={{height: WindowSize.windowHeight / 10}}
+                fontFamily="BebasNeue-Regular"
+                fontWeight="bold"
+                fontSize={24}
+                lineHeight={26}
               />
 
               {errors.title && touched.title ? (
-                <Text style={Styles.ShowError}>{errors.title}</Text>
+                <Text style={Styles.showError}>{errors.title}</Text>
               ) : null}
             </View>
             <View >
-              <TextInput
-                style={Styles.MultilineTextInput}
-                numberOfLines={5}
+              <Input
+                color="#272727"
                 placeholder="Description"
-                placeholderTextColor={'rgba(0,0,0,0.3)'}
                 onChangeText={handleChange('description')}
                 onBlur={handleBlur('description')}
-                multiline
                 value={values.description}
+                fontFamily="Montserrat-ExtraLight"
+                fontSize={18}
+                lineHeight={16}
+                textAlignVertical="top"
+                numberOfLines={5}
+                inputTextType ="multiline"
               />
             </View>
           </>
@@ -63,16 +78,11 @@ const CreateTodoComponent: React.FC<CreateTodoProps> = props => {
 };
 
 const Styles = StyleSheet.create({
-  TodoListChildContainer: {
+  todoListChildContainer: {
     marginRight: 25,
   },
-  Input: {
-    height: windowHeight / 10,
-    color: '#272727',
-    fontFamily: 'BebasNeue-Regular',
-    fontWeight: 'bold',
-    fontSize: 24,
-    lineHeight: 26,
+  showError: {
+    color: 'red',
   },
   MultilineTextInput: {
     textAlignVertical: 'top',
@@ -80,18 +90,6 @@ const Styles = StyleSheet.create({
     fontFamily: 'Montserrat-ExtraLight',
     lineHeight: 16,
     fontSize: 18,
-  },
-  ShowError: {
-    color: 'red',
-  },
-  Calendar: {
-    marginTop: 15,
-  },
-  ImagePicker: {
-    marginTop: 15,
-  },
-  SubmitButton: {
-    marginTop: 15,
   },
 });
 export default CreateTodoComponent;

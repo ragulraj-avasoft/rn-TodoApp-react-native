@@ -1,6 +1,6 @@
 import React from 'react';
-import {Dimensions, Image, Pressable, StyleSheet, Text} from 'react-native';
-const windowHeight = Dimensions.get('window').height;
+import {Image, Pressable, StyleSheet, Text} from 'react-native';
+import WindowSize from '../config/Measurement';
 
 interface PickerProps {
   text: string;
@@ -9,18 +9,18 @@ const Picker: React.FC<PickerProps> = props => {
   return (
     <>
       {props.text === 'Add Image (Optional)' ? (
-        <Pressable style={Styles.Picker}>
-          <Text style={Styles.Text}>{props.text}</Text>
+        <Pressable style={Styles.picker}>
+          <Text style={Styles.text}>{props.text}</Text>
           <Image
-            style={Styles.ImageIcon}
+            style={Styles.imageIcon}
             source={require('../images/image.png')}
           />
         </Pressable>
       ) : (
-        <Pressable style={Styles.Picker}>
-          <Text style={Styles.Text}>{props.text}</Text>
+        <Pressable style={Styles.picker}>
+          <Text style={Styles.text}>{props.text}</Text>
           <Image
-            style={Styles.ImageIcon}
+            style={Styles.imageIcon}
             source={require('../images/calendar.png')}
           />
         </Pressable>
@@ -30,17 +30,17 @@ const Picker: React.FC<PickerProps> = props => {
 };
 
 const Styles = StyleSheet.create({
-  Picker: {
+  picker: {
     justifyContent: 'center',
     borderColor: '#fff',
     borderWidth: 2,
     borderRadius: 15,
-    height: windowHeight / 14,
+    height: WindowSize.windowHeight / 14,
   },
-  Text: {
+  text: {
     marginLeft: 15,
   },
-  ImageIcon: {
+  imageIcon: {
     position: 'absolute',
     alignSelf: 'flex-end',
     justifyContent: 'center',

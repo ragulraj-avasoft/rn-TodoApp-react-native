@@ -8,7 +8,6 @@ import {
   View,
 } from 'react-native';
 import Todo from '../models/Todo.model';
-const windowHeight = Dimensions.get('window').height;
 let EXTENDEDSTRING = '...';
 interface TodoItemProps {
   todo: Todo;
@@ -21,19 +20,41 @@ const TodoItem: React.FC<TodoItemProps> = props => {
       currentTodo: props.todo,
     });
   };
+  const CalculateDate = () => {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    let date: Date = props.todo.createdAt;
+    var day = date.getDate().toString()
+    let monthName = months[date.getMonth()];
+    var year = date.getFullYear().toString();
+    var createdDate = day + ' ' + monthName + ' ' + year;
+    return createdDate;
+  };
 
   return (
     <>
       <ScrollView>
-        <View style={Styles.TodoItemcontainer}>
+        <View style={Styles.todoItemcontainer}>
           {props.todo !== undefined &&
             (props.todo.id % 2 === 0 ? (
               <Pressable
-                style={Styles.PressableContainer}
+                style={Styles.pressableContainer}
                 onPress={() => OnPressTodo()}>
-                <View style={Styles.PressableChildContainer}>
-                  <Text style={Styles.Header}>{props.todo.title}</Text>
-                  <Text style={Styles.Description}>
+                <View style={Styles.pressableChildContainer}>
+                  <Text style={Styles.header}>{props.todo.title}</Text>
+                  <Text style={Styles.description}>
                     {props.todo.description !== undefined
                       ? props.todo.description.length < 20
                         ? props.todo.description
@@ -41,8 +62,8 @@ const TodoItem: React.FC<TodoItemProps> = props => {
                           EXTENDEDSTRING
                       : null}
                   </Text>
-                  <Text style={Styles.Date}>
-                    Created at {props.todo.createdAt}
+                  <Text style={Styles.date}>
+                    Created at {CalculateDate()}
                   </Text>
                 </View>
               </Pressable>
@@ -50,9 +71,9 @@ const TodoItem: React.FC<TodoItemProps> = props => {
               <Pressable
                 style={Styles.evenpressableContainer}
                 onPress={() => OnPressTodo()}>
-                <View style={Styles.PressableChildContainer}>
-                  <Text style={Styles.Header}>{props.todo.title}</Text>
-                  <Text style={Styles.Description}>
+                <View style={Styles.pressableChildContainer}>
+                  <Text style={Styles.header}>{props.todo.title}</Text>
+                  <Text style={Styles.description}>
                     {props.todo.description !== undefined
                       ? props.todo.description.length < 20
                         ? props.todo.description
@@ -60,8 +81,8 @@ const TodoItem: React.FC<TodoItemProps> = props => {
                           EXTENDEDSTRING
                       : null}
                   </Text>
-                  <Text style={Styles.Date}>
-                    Created at {props.todo.createdAt}
+                  <Text style={Styles.date}>
+                    Created at {CalculateDate()}
                   </Text>
                 </View>
               </Pressable>
@@ -72,14 +93,14 @@ const TodoItem: React.FC<TodoItemProps> = props => {
   );
 };
 const Styles = StyleSheet.create({
-  PressableChildContainer: {
+  pressableChildContainer: {
     marginLeft: 15,
     marginTop: 5,
   },
-  TodoItemcontainer: {
+  todoItemcontainer: {
     paddingTop: 20,
   },
-  PressableContainer: {
+  pressableContainer: {
     backgroundColor: '#F76C6A',
     borderRadius: 15,
     height: 135,
@@ -89,25 +110,22 @@ const Styles = StyleSheet.create({
     borderRadius: 15,
     height: 135,
   },
-  Header: {
+  header: {
     fontFamily: 'Montserrat-SemiBold',
     fontWeight: '800',
     color: 'white',
   },
-  Description: {
+  description: {
     color: 'white',
     fontFamily: 'Montserrat-ExtraLight',
     fontWeight: '600',
     paddingTop: 10,
     height: 50,
   },
-  Date: {
+  date: {
     color: 'white',
     paddingTop: 30,
     fontFamily: 'Montserrat-ExtraLight',
-  },
-  contentContainer: {
-    paddingVertical: 40,
   },
 });
 

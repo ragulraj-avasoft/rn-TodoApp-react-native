@@ -1,15 +1,7 @@
 import React from 'react';
-import {
-  Dimensions,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import Clickable from './Clickable.component';
-const windowHeight = Dimensions.get('window').height;
-const windowWidth = Dimensions.get('window').width;
+import WindowSize from '../config/Measurement';
 
 interface DeletePopUpProps {
   popUp: Function;
@@ -24,30 +16,30 @@ const DeletePopUp: React.FC<DeletePopUpProps> = props => {
     props.popUp();
   };
   return (
-    <View style={Styles.DeleteParentContainer}>
-      <View style={Styles.DeleteChildCntainer}>
+    <View style={Styles.deleteParentContainer}>
+      <View style={Styles.deleteChildCntainer}>
         <Pressable onPress={() => closePopup()}>
           <Image
-            style={Styles.CloseButton}
+            style={Styles.closeButton}
             source={require('../images/closeButton.png')}
           />
         </Pressable>
-        <Text style={Styles.Confirmationtext}>
+        <Text style={Styles.confirmationText}>
           Are you sure want to delete this todo?
         </Text>
 
-        <View style={Styles.ButtonContainer}>
+        <View style={Styles.buttonContainer}>
           <View style={Styles.cancelButton}>
             <Clickable
               buttonText={'cancel'}
-              color={'orange'}
+              color={'#F79E89'}
               onPress={closePopup}
             />
           </View>
-          <View style={Styles.DeleteButton}>
+          <View style={Styles.deleteButton}>
             <Clickable
               buttonText={'Delete'}
-              color={'orange'}
+              color={'#F79E89'}
               onPress={onDelete}
             />
           </View>
@@ -58,9 +50,9 @@ const DeletePopUp: React.FC<DeletePopUpProps> = props => {
 };
 
 const Styles = StyleSheet.create({
-  DeleteParentContainer: {
-    height: windowHeight,
-    width: windowWidth,
+  deleteParentContainer: {
+    height: WindowSize.windowHeight,
+    width: WindowSize.windowWidth,
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 1,
@@ -68,33 +60,33 @@ const Styles = StyleSheet.create({
     opacity: 50,
     position: 'absolute',
   },
-  DeleteChildCntainer: {
-    height: windowHeight / 3.5,
-    width: windowWidth / 1.4,
+  deleteChildCntainer: {
+    height: WindowSize.windowHeight / 3.5,
+    width: WindowSize.windowWidth / 1.4,
     backgroundColor: '#fff',
     zIndex: 2,
   },
-  Confirmationtext: {
+  confirmationText: {
     color: 'black',
     fontWeight: 'bold',
     fontSize: 15,
     paddingTop: 25,
     paddingLeft: 10,
   },
-  ButtonContainer: {
+  buttonContainer: {
     justifyContent: 'space-between',
     flexDirection: 'row',
     marginTop: 40,
   },
-  DeleteButton: {
-    width: windowWidth / 4,
+  deleteButton: {
+    width: WindowSize.windowWidth / 4,
     marginRight: 10,
   },
   cancelButton: {
-    width: windowWidth / 4,
+    width: WindowSize.windowWidth / 4,
     marginLeft: 10,
   },
-  CloseButton: {
+  closeButton: {
     marginTop: 5,
     marginRight: 5,
     width: 25,
