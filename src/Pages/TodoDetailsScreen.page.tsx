@@ -1,22 +1,12 @@
 import React, {useEffect, useState} from 'react';
 import Todo from '../models/Todo.model';
-import {useDispatch, useSelector} from 'react-redux';
-import {createTodo, deleteTodo} from '../global-states/TodoState';
-import {editTodo} from '../global-states/TodoState';
-import {RootState} from '../Store';
 import DeletePopUp from '../Components/DeletePopUp.component';
 import TodoDetailsPageHeader from '../Components/TodoDetailsPageHeader.component';
 import CreateTodoComponent from '../Components/CreateTodo.component';
 import {NavigationScreenProp} from 'react-navigation';
-import {
-  Dimensions,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {Image, Pressable, StyleSheet, Text, View} from 'react-native';
 import WindowSize from '../config/Measurement';
+import AlterTodo from '../TodoDataBase';
 
 interface TOdoDetailsProps {
   navigation: NavigationScreenProp<any, any>;
@@ -24,17 +14,17 @@ interface TOdoDetailsProps {
 }
 const TodoDetails: React.FC<TOdoDetailsProps> = props => {
   const value = props.route.params;
-  const OverAllTodo = useSelector((state: RootState) => state.Todo.todo);
   let [imageUri, setImageUri] = useState(value.currentTodo.imageUri);
   let [singleTodo, setSingleTodo] = useState<Todo>(value.currentTodo);
   let [isCloseButtonClicked, setCloseButtonClicked] = useState(false);
   let [deleteClicked, setDeleteClicked] = useState(false);
-  const dispatcher = useDispatch();
+  let id = 0;
   useEffect(() => {
     if (value.title === 'edit' && imageUri != undefined) {
       setCloseButtonClicked(true);
     }
   }, []);
+
   const calculateDate = () => {
     const months = [
       'January',
@@ -50,50 +40,39 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
       'November',
       'December',
     ];
-    let date:Date = value.currentTodo.createdAt;
-    var day = date.getDate().toString()
+    let date: Date = new Date(value.currentTodo.createdAt);
+    var day = date.getDate().toString();
     let monthName = months[date.getMonth()];
     var year = date.getFullYear().toString();
     var createdDate = day + ' ' + monthName + ' ' + year;
     return createdDate;
   };
-  let id = 0;
 
   const onSave = async () => {
-
     if (singleTodo !== undefined) {
-      console.log(singleTodo)
-      if (OverAllTodo.length === 0) {
-        singleTodo.id = id + 1;
-      } else {
-        let length = OverAllTodo.length;
-        let currentId = OverAllTodo[length - 1].id;
-        singleTodo.id = currentId + 1;
-      }
       if (singleTodo.description === undefined) {
         singleTodo.description = '';
       }
-      singleTodo.imageUri = imageUri;
-      dispatcher(createTodo(singleTodo));
-      console.log("saved")
+      await AlterTodo.createTodo(singleTodo);
+      console.log('created');
       props.navigation.navigate('todo');
     }
   };
 
-  const onEdit = () => {
+  const onEdit = async () => {
     if (singleTodo !== undefined) {
       singleTodo.id = value.currentTodo.id;
       singleTodo.createdAt = value.currentTodo.createdAt;
       singleTodo.imageUri = imageUri;
       setImageUri(imageUri);
-      dispatcher(editTodo(singleTodo));
+      await AlterTodo.editTodo(singleTodo.id, singleTodo);
       props.navigation.navigate('todo');
     }
   };
 
-  const onDelete = () => {
+  const onDelete = async () => {
+    await AlterTodo.deleteTodo(value.currentTodo.id);
     props.navigation.navigate('todo');
-    dispatcher(deleteTodo(value.currentTodo));
   };
 
   const addImage = (imageUri: string) => {
@@ -166,9 +145,7 @@ const TodoDetails: React.FC<TOdoDetailsProps> = props => {
         ) : null}
         {value.title === 'edit' ? (
           <View style={Styles.createdAtContainer}>
-            <Text style={Styles.createdAt}>
-              Created at {calculateDate()}
-            </Text>
+            <Text style={Styles.createdAt}>Created at {calculateDate()}</Text>
           </View>
         ) : null}
       </View>

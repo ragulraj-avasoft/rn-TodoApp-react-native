@@ -1,11 +1,8 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import TodoListPageHeader from '../Components/TodoListPageHeader.component';
 import TodoItem from '../Components/TodoItem.component';
-import {useSelector} from 'react-redux';
-import {RootState} from '../Store';
 import {NavigationScreenProp} from 'react-navigation';
 import {
-  Dimensions,
   Image,
   ScrollView,
   StyleSheet,
@@ -13,7 +10,8 @@ import {
   View,
 } from 'react-native';
 import WindowSize from '../config/Measurement';
-
+import Todo from '../models/Todo.model';
+import AlterTodo from '../TodoDataBase';
 
 interface TodoListProps {
   navigation: NavigationScreenProp<any, any>;
@@ -21,10 +19,28 @@ interface TodoListProps {
 }
 
 const TodoList: React.FC<TodoListProps> = props => {
-  const todo = useSelector((state: RootState) => state.Todo.todo);
+  let [allTodo, setAllTodo] = useState<Todo[]>();
+  useEffect(() => {
+    fetcchTodo();
+  }, []);
+  const fetcchTodo = async () => {
+    let todo = await AlterTodo.getAllTodo();
+    setAllTodo(todo);
+    try {
+      let todoRealm: Realm.Results<Realm.Object> =
+        await AlterTodo.getRealmObject();
+      todoRealm.addListener(async () => {
+        let todo = await AlterTodo.getAllTodo();
+        setAllTodo(todo);
+      });
+    } catch (error) {
+      console.error(
+        `Unable to update the tasks' state, an exception was thrown within the change listener: ${error}`,
+      );
+    }
+  };
 
   const OnPressFAB = () => {
-    const value = props.route.params;
     props.navigation.navigate('todoDetails', {
       title: 'save',
       currentTodo: [],
@@ -38,13 +54,15 @@ const TodoList: React.FC<TodoListProps> = props => {
           <TodoListPageHeader />
           <ScrollView>
             <View style={Styles.overallList}>
-              {todo.map(todoItem => (
-                <TodoItem
-                  key={todoItem.id}
-                  todo={todoItem}
-                  naigation={props.navigation}
-                />
-              ))}
+              {allTodo !== undefined
+                ? allTodo.map((todoItem: Todo) => (
+                    <TodoItem
+                      key={todoItem.id}
+                      todo={todoItem}
+                      naigation={props.navigation}
+                    />
+                  ))
+                : null}
             </View>
           </ScrollView>
         </View>
@@ -62,10 +80,9 @@ const TodoList: React.FC<TodoListProps> = props => {
 };
 
 const Styles = StyleSheet.create({
-
   todoListParentContainer: {
     height: WindowSize.windowHeight,
-    width:WindowSize.windowWidth,
+    width: WindowSize.windowWidth,
     minHeight: WindowSize.windowHeight,
   },
   todoListChildContainer: {

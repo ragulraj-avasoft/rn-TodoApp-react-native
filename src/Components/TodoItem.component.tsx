@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Dimensions,
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import {Pressable, ScrollView, StyleSheet, Text, View} from 'react-native';
 import Todo from '../models/Todo.model';
 let EXTENDEDSTRING = '...';
 interface TodoItemProps {
@@ -35,11 +28,12 @@ const TodoItem: React.FC<TodoItemProps> = props => {
       'November',
       'December',
     ];
-    let date: Date = props.todo.createdAt;
-    var day = date.getDate().toString()
+    let date: Date = new Date(props.todo.createdAt);
+    console.log(date);
+    let day = date.getDate();
     let monthName = months[date.getMonth()];
-    var year = date.getFullYear().toString();
-    var createdDate = day + ' ' + monthName + ' ' + year;
+    let year = date.getFullYear().toString();
+    let createdDate = day + ' ' + monthName + ' ' + year;
     return createdDate;
   };
 
@@ -62,9 +56,7 @@ const TodoItem: React.FC<TodoItemProps> = props => {
                           EXTENDEDSTRING
                       : null}
                   </Text>
-                  <Text style={Styles.date}>
-                    Created at {CalculateDate()}
-                  </Text>
+                  <Text style={Styles.date}>Created at {CalculateDate()}</Text>
                 </View>
               </Pressable>
             ) : (
@@ -81,9 +73,7 @@ const TodoItem: React.FC<TodoItemProps> = props => {
                           EXTENDEDSTRING
                       : null}
                   </Text>
-                  <Text style={Styles.date}>
-                    Created at {CalculateDate()}
-                  </Text>
+                  <Text style={Styles.date}>Created at {CalculateDate()}</Text>
                 </View>
               </Pressable>
             ))}
